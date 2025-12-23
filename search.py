@@ -87,11 +87,56 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    """seq will be right left top bottom"""
+    myStack = util.Stack() #Create Stack  [(x,y),[path]]
+    visited = []
+    
+    myStack.push([problem.getStartState(),[]])
+    visited.append(problem.getStartState())
+    while not myStack.isEmpty():
+
+        currentNode,path = myStack.pop()
+
+        if problem.isGoalState(currentNode):
+            return path
+        
+        adj = problem.getSuccessors(currentNode)
+        for adjNode in adj:
+            node = adjNode[0]
+            directions = adjNode[1]
+            if node not in visited:
+                newPath = list(path)
+                newPath.append(directions)
+                myStack.push([node,newPath])
+                visited.append(node)
+
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    myQueue = util.Queue() #Create Queue  [(x,y),[path]]
+    visited = []
+    
+    myQueue.push([problem.getStartState(),[]])
+    visited.append(problem.getStartState())
+    while not myQueue.isEmpty():
+
+        currentNode,path = myQueue.pop()
+
+        if problem.isGoalState(currentNode):
+            return path
+        
+        adj = problem.getSuccessors(currentNode)
+        for adjNode in adj:
+            node = adjNode[0]
+            directions = adjNode[1]
+            if node not in visited:
+                newPath = list(path)
+                newPath.append(directions)
+                myQueue.push([node,newPath])
+                visited.append(node)
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
