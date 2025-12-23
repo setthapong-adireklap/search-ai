@@ -142,30 +142,28 @@ def breadthFirstSearch(problem: SearchProblem):
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    myPriorityQueue = util.PriorityQueue() #Create Queue  [(x,y),[path],total_cost],total_cost
+    myPriorityQueue = util.PriorityQueue() #Create Priority Queue  [(x,y),[path]],total_cost
     visited = {} # {(x,y):cost}
     
-    myPriorityQueue.push([problem.getStartState(),[],0],0)
+    myPriorityQueue.push([problem.getStartState(),[]],0)
     visited[problem.getStartState()] = 0
     while not myPriorityQueue.isEmpty():
 
-        currentNode,path,currentCost = myPriorityQueue.pop()
+        currentNode,path = myPriorityQueue.pop()
+        currentCost = visited[currentNode]
 
         if problem.isGoalState(currentNode):
             return path
         
         adj = problem.getSuccessors(currentNode)
         for adjNode in adj:
-            node = adjNode[0]
-            directions = adjNode[1]
-            cost = adjNode[2]
+            node,directions,cost = adjNode
             totalCost = currentCost + cost
             if (node not in visited) or ((node in visited) and visited[node] > totalCost):
                 newPath = list(path)
                 newPath.append(directions)
-                myPriorityQueue.push([node,newPath,totalCost],totalCost)
+                myPriorityQueue.push([node,newPath],totalCost)
                 visited[node] = totalCost
-
 
     util.raiseNotDefined()
 
