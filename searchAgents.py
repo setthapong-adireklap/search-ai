@@ -283,8 +283,8 @@ class CornersProblem(search.SearchProblem):
         """
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
-        self.visitedCorners = (0,0,0,0)
-        self.startState = (self.startingPosition, self.visitedCorners)
+        self.visitedCorners = (0,0,0,0) # (lb,lt,rb,rt)
+        self.startState = (self.startingPosition, self.visitedCorners) # contain x,y and visitedCorners
         top, right = self.walls.height-2, self.walls.width-2
         self.corners = ((1,1), (1,top), (right, 1), (right, top))
         for corner in self.corners:
@@ -298,7 +298,6 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
         return self.startState
 
     def isGoalState(self, state: Any):
@@ -307,9 +306,8 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
         visitedCornersState = state[1]
-        isGoal = all(x == 1 for x in visitedCornersState)
-        util.raiseNotDefined()
-        return  isGoal
+        isGoal = all(x for x in visitedCornersState) # return true if all not 0
+        return isGoal
 
     def getSuccessors(self, state: Any):
         """
@@ -332,6 +330,21 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            x,y = state[0]
+            dx,dy = Actions.directionToVector(action)
+            nextx,nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+
+            if hitsWall:
+                continue
+
+            nextState = list(state[1])
+            for i, corner in enumerate(self.corners):
+                if (nextx, nexty) == corner:
+                    nextState[i] = 1
+            nextState = tuple(nextState)
+
+            successors.append((((nextx, nexty), nextState), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors

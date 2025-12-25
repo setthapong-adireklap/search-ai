@@ -110,8 +110,6 @@ def depthFirstSearch(problem: SearchProblem):
                 myStack.push([node,newPath])
                 visited.append(node)
 
-    util.raiseNotDefined()
-
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
@@ -136,8 +134,6 @@ def breadthFirstSearch(problem: SearchProblem):
                 newPath.append(directions)
                 myQueue.push([node,newPath])
                 visited.append(node)
-
-    util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
@@ -164,8 +160,6 @@ def uniformCostSearch(problem: SearchProblem):
                 newPath.append(directions)
                 myPriorityQueue.push([node,newPath],totalCost)
                 visited[node] = totalCost
-
-    util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -202,7 +196,6 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
                 myPriorityQueue.push([node,newPath],fCost)
                 visited[node] = totalCost
 
-    util.raiseNotDefined()
 
 
 # Abbreviations
