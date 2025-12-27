@@ -88,11 +88,13 @@ def depthFirstSearch(problem: SearchProblem):
     """
     "*** YOUR CODE HERE ***"
     """seq will be right left top bottom"""
+    ##This version move the check visit condition for q1: 3/3 
     myStack = util.Stack() #Create Stack  [(x,y),[path]]
     visited = []
-    
-    myStack.push([problem.getStartState(),[]])
-    visited.append(problem.getStartState())
+    path = []
+
+    myStack.push([problem.getStartState(),path])
+    #visited.append(problem.getStartState())
     while not myStack.isEmpty():
 
         currentNode,path = myStack.pop()
@@ -100,23 +102,28 @@ def depthFirstSearch(problem: SearchProblem):
         if problem.isGoalState(currentNode):
             return path
         
+        if(currentNode in visited):
+            continue
+        visited.append(currentNode)
+
         adj = problem.getSuccessors(currentNode)
         for adjNode in adj:
             node = adjNode[0]
             directions = adjNode[1]
-            if node not in visited:
-                newPath = list(path)
-                newPath.append(directions)
-                myStack.push([node,newPath])
-                visited.append(node)
+            newPath = list(path)
+            newPath.append(directions)
+            myStack.push([node,newPath])
+
+    return path
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     myQueue = util.Queue() #Create Queue  [(x,y),[path]]
     visited = []
+    path = []
     
-    myQueue.push([problem.getStartState(),[]])
+    myQueue.push([problem.getStartState(),path])
     visited.append(problem.getStartState())
     while not myQueue.isEmpty():
 
@@ -135,13 +142,16 @@ def breadthFirstSearch(problem: SearchProblem):
                 myQueue.push([node,newPath])
                 visited.append(node)
 
+    return path
+
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     myPriorityQueue = util.PriorityQueue() #Create Priority Queue  [(x,y),[path]],total_cost
     visited = {} # {(x,y):cost}
+    path = []
     
-    myPriorityQueue.push([problem.getStartState(),[]],0)
+    myPriorityQueue.push([problem.getStartState(),path],0)
     visited[problem.getStartState()] = 0
     while not myPriorityQueue.isEmpty():
 
@@ -160,6 +170,7 @@ def uniformCostSearch(problem: SearchProblem):
                 newPath.append(directions)
                 myPriorityQueue.push([node,newPath],totalCost)
                 visited[node] = totalCost
+    return path
 
 def nullHeuristic(state, problem=None):
     """
@@ -173,8 +184,9 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     myPriorityQueue = util.PriorityQueue() #Create Priority Queue  [(x,y),[path]],total_cost
     visited = {} # {(x,y):cost}
-    
-    myPriorityQueue.push([problem.getStartState(),[]],0)
+    path = []
+
+    myPriorityQueue.push([problem.getStartState(),path],0)
     visited[problem.getStartState()] = 0
     while not myPriorityQueue.isEmpty():
 
@@ -195,7 +207,7 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
                 newPath.append(directions)
                 myPriorityQueue.push([node,newPath],fCost)
                 visited[node] = totalCost
-
+    return path
 
 
 # Abbreviations

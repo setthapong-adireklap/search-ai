@@ -34,6 +34,7 @@ description for details.
 Good luck and happy searching!
 """
 
+from itertools import permutations
 from typing import List, Tuple, Any
 from game import Directions
 from game import Agent
@@ -338,13 +339,13 @@ class CornersProblem(search.SearchProblem):
             if hitsWall:
                 continue
 
-            nextState = list(state[1])
+            nextCorner = list(state[1])
             for i, corner in enumerate(self.corners):
                 if (nextx, nexty) == corner:
-                    nextState[i] = 1
-            nextState = tuple(nextState)
+                    nextCorner[i] = 1
+            nextCorner = tuple(nextCorner)
 
-            successors.append((((nextx, nexty), nextState), action, 1))
+            successors.append((((nextx, nexty), nextCorner), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -378,8 +379,24 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
     "*** YOUR CODE HERE ***"
+
+    visitedCornersState = state[1]
+    hCost = float('inf')
+
+    #find all combination 
+    for perm in permutations([i for i in range(4) if not visitedCornersState[i]]):
+        cost = 0
+        currPosition = state[0]
+        for index in perm:
+            corner = corners[index]
+            cost += util.manhattanDistance(currPosition,corner)
+            currPosition = corner
+        hCost = min(hCost, cost)
+    
+    if not all(v for v in visitedCornersState):
+        return hCost
+    
     return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
