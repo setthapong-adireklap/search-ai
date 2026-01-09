@@ -97,22 +97,22 @@ def depthFirstSearch(problem: SearchProblem):
     #visited.append(problem.getStartState())
     while not myStack.isEmpty():
 
-        currentNode,path = myStack.pop()
+        currentState,path = myStack.pop()
 
-        if problem.isGoalState(currentNode):
+        if problem.isGoalState(currentState):
             return path
         
-        if(currentNode in visited):
+        if(currentState in visited):
             continue
-        visited.append(currentNode)
+        visited.append(currentState)
 
-        adj = problem.getSuccessors(currentNode)
+        adj = problem.getSuccessors(currentState)
         for adjNode in adj:
-            node = adjNode[0]
+            nextStage = adjNode[0]
             directions = adjNode[1]
             newPath = list(path)
             newPath.append(directions)
-            myStack.push([node,newPath])
+            myStack.push([nextStage,newPath])
 
     return path
 
@@ -127,20 +127,20 @@ def breadthFirstSearch(problem: SearchProblem):
     visited.append(problem.getStartState())
     while not myQueue.isEmpty():
 
-        currentNode,path = myQueue.pop()
+        currentState,path = myQueue.pop()
 
-        if problem.isGoalState(currentNode):
+        if problem.isGoalState(currentState):
             return path
         
-        adj = problem.getSuccessors(currentNode)
+        adj = problem.getSuccessors(currentState)
         for adjNode in adj:
-            node = adjNode[0]
+            nextStage = adjNode[0]
             directions = adjNode[1]
-            if node not in visited:
+            if nextStage not in visited:
                 newPath = list(path)
                 newPath.append(directions)
-                myQueue.push([node,newPath])
-                visited.append(node)
+                myQueue.push([nextStage,newPath])
+                visited.append(nextStage)
 
     return path
 
@@ -155,21 +155,21 @@ def uniformCostSearch(problem: SearchProblem):
     visited[problem.getStartState()] = 0
     while not myPriorityQueue.isEmpty():
 
-        currentNode,path = myPriorityQueue.pop()
-        currentCost = visited[currentNode]
+        currentState,path = myPriorityQueue.pop()
+        currentCost = visited[currentState]
 
-        if problem.isGoalState(currentNode):
+        if problem.isGoalState(currentState):
             return path
         
-        adj = problem.getSuccessors(currentNode)
+        adj = problem.getSuccessors(currentState)
         for adjNode in adj:
-            node,directions,cost = adjNode
+            nextStage,directions,cost = adjNode
             totalCost = currentCost + cost
-            if (node not in visited) or ((node in visited) and visited[node] > totalCost):
+            if (nextStage not in visited) or ((nextStage in visited) and visited[nextStage] > totalCost):
                 newPath = list(path)
                 newPath.append(directions)
-                myPriorityQueue.push([node,newPath],totalCost)
-                visited[node] = totalCost
+                myPriorityQueue.push([nextStage,newPath],totalCost)
+                visited[nextStage] = totalCost
     return path
 
 def nullHeuristic(state, problem=None):
@@ -190,23 +190,23 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     visited[problem.getStartState()] = 0
     while not myPriorityQueue.isEmpty():
 
-        currentNode,path = myPriorityQueue.pop()
-        currentCost = visited[currentNode]
+        currentState,path = myPriorityQueue.pop()
+        currentCost = visited[currentState]
 
-        if problem.isGoalState(currentNode):
+        if problem.isGoalState(currentState):
             return path
         
-        adj = problem.getSuccessors(currentNode)
+        adj = problem.getSuccessors(currentState)
         for adjNode in adj:
-            node,directions,cost = adjNode
-            hCost = heuristic(node,problem)
+            nextStage,directions,cost = adjNode
+            hCost = heuristic(nextStage,problem)
             totalCost = currentCost + cost
             fCost = totalCost + hCost
-            if (node not in visited) or ((node in visited) and visited[node] > totalCost):
+            if (nextStage not in visited) or ((nextStage in visited) and visited[nextStage] > totalCost):
                 newPath = list(path)
                 newPath.append(directions)
-                myPriorityQueue.push([node,newPath],fCost)
-                visited[node] = totalCost
+                myPriorityQueue.push([nextStage,newPath],fCost)
+                visited[nextStage] = totalCost
     return path
 
 
