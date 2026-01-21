@@ -94,7 +94,6 @@ def depthFirstSearch(problem: SearchProblem):
     path = []
 
     myStack.push([problem.getStartState(),path])
-    #visited.append(problem.getStartState())
     while not myStack.isEmpty():
 
         currentState,path = myStack.pop()
