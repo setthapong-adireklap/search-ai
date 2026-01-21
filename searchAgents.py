@@ -494,12 +494,41 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     "*** YOUR CODE HERE ***"
     foodGrid = foodGrid.asList() #Return the (x,y) of food
     hCost = 0
+
+    if 'MSTCost' not in problem.heuristicInfo:
+        problem.heuristicInfo['MSTCost'] = {} 
     
-    #go to the furthest food 
-    for food in foodGrid:
-        tmp = util.manhattanDistance(position,food)
-        hCost = max(hCost,tmp)
+    if not foodGrid:
+        return 0
     
+    hCost = 0
+    nearestFoodDist = min(mazeDistance(position, food, problem.startingGameState) for food in foodGrid)
+
+    remaining_food = len(foodGrid) 
+    if remaining_food in problem.heuristicInfo['MSTCost']:
+        hCost = nearestFoodDist + problem.heuristicInfo['MSTCost'][remaining_food]
+        return hCost
+
+    mstCost = 0
+    visitedFood = {foodGrid[0]}
+    unvisitedFood = set(foodGrid[1:])
+    while len(unvisitedFood) != 0:
+        minDist = float('inf')
+        nearestFood = -1
+        for node in visitedFood:
+            for adj in unvisitedFood:
+                    distance = mazeDistance(node, adj, problem.startingGameState)
+                    if distance < minDist:
+                        minDist = distance
+                        nearestFood = adj
+        if nearestFood != -1:
+            mstCost += minDist
+            visitedFood.add(nearestFood)
+            unvisitedFood.remove(nearestFood)
+
+    problem.heuristicInfo['MSTCost'][remaining_food] = mstCost
+    hCost = nearestFoodDist + mstCost
+             
     return hCost
 
 class ClosestDotSearchAgent(SearchAgent):
@@ -569,7 +598,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        #if this state has a food then it's goal.
+        #if this state has a food, then it's a goal.
         return self.food[x][y]
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: pacman.GameState) -> int:
